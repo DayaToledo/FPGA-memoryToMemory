@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/styles/game.css" />
+    <title>Cara a Cara</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+      integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.3/socket.io.js"
+      integrity="sha512-PU5S6BA03fRv1Q5fpwXjg5nlRrgdoguZ74urFInkbABMCENyx5oP3hrDzYMMPh3qdLdknIvrGj3yqZ4JuU7Nag=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+  </head>
+  <body>
+    <main>
+      
+      <div id="more-details">
+        <strong></strong>
+        <div id="more-details-description">
+          <img onerror="this.src='/assets/picture.png'" alt="" />
+          <ul></ul>
+        </div>
+        <div id="more-details-buttons"></div>
+      </div>
+
+      <section id="cards">
+        {% for key in keys %}
+          <div class="card" id="{{key}}">
+            <img src="{{items[key].path}}" onerror="this.src='/assets/picture.png'" alt="" />
+            <p>{{items[key].name}}</p>
+          </div>
+        {% endfor %}
+      </section>
+
+      <aside>
+        <h3></h3>
+        <div id="profile">
+          <div>
+            <p>Sua carta:</p>
+            <div class="card">
+              <img onerror="this.src='/assets/picture.png'" alt="" />
+              <p></p>
+            </div>
+          </div>
+          <div class="lifes"></div>
+        </div>
+
+        <form id="chat"  autocomplete="off">
+          <div class="messages"></div>
+          <div id="send-message">
+            <input type="text" name="message" placeholder="Digite sua mensagem" />
+            <button type="submit">ENVIAR</button>
+          </div>
+          <button type="button" id="pass-game">PASSAR A VEZ</button>
+        </form>
+      </aside>
+    </main>
+
+    <div id="modal-box">
+      <div class="modal-content">
+        <p></p>
+        <span id="btn-close-modal">&times;</span>
+      </div>
+    </div>
+    
+    <script type="module" src="/scripts/game.js"></script>
+  </body>
+</html>
