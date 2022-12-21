@@ -35,6 +35,10 @@ main {
   align-items: center;
 }
 
+p {
+  margin-bottom: -100px;
+}
+
 button {
   width: 200px;
   height: 50px;

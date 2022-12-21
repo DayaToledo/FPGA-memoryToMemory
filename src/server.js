@@ -1,8 +1,7 @@
 import express from 'express'; 
 import nunjucks from 'nunjucks'; 
 
-
-import { pageHome, pageGame, pageWaiting, pageEnd, pageRules } from './pages.js';
+import { pageHome, pageGame, pageWaiting, pageEnd, pageRules, pageAbout } from './pages.js';
 
 const app = express(); 
 
@@ -17,6 +16,7 @@ app.get("/waiting", pageWaiting);
 app.get("/game", pageGame);
 app.get("/end", pageEnd);
 app.get("/rules", pageRules);
+app.get("/about", pageAbout);
 
 import { createServer } from 'http';
 import { Server } from 'socket.io';

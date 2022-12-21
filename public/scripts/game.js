@@ -66,7 +66,7 @@ socket.on('updatePlayers', updatePlayer);
 const getAndRenderAndSendMessage = () => {
   event.preventDefault();
   var message = $('input[name=message]').val();
-  document.querySelector('input[name=message]').innerHTML = '';
+  document.querySelector('input[name=message]').value = '';
 
   if (message.length) {
     var messageObject = {

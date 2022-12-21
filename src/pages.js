@@ -19,3 +19,7 @@ export function pageEnd(req, res) {
 export function pageRules(req, res) {
     return res.render("rules.html");
 }
+
+export function pageAbout(req, res) {
+    return res.render("about.html");
+}
