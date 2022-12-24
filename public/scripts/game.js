@@ -5,15 +5,26 @@ var socket = io('http://localhost:3000');
 let opponentCard;
 let myCard;
 let username;
+let roomName;
 let arePlaying;
 
 let availableLifes = 3;
 const discardCards = [];
 
 socket.on('receivedCards', (data) => {
-  ({ opponentCard } = data);
-  if (!data.myCard) socket.emit('sendCards', { myCard, opponentCard });
   console.log(data);
+  if (data.username !== username) {
+    opponentCard = data.myCard;
+    if (!data.opponentCard)
+      socket.emit('sendCards', {
+        myCard: data.myCard,
+        opponentCard: myCard,
+        username: data.username,
+        roomName
+      });
+  } else {
+    ({ opponentCard } = data);
+  }
 });
 
 const handleModalMessage = (message) => {
@@ -55,6 +66,10 @@ const updatePlayer = ({ players }) => {
   document.querySelector("aside h3").innerHTML = innerHTML;
 }
 
+socket.on('exitGame', () => {
+  finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!");
+});
+
 socket.on('previousMessages', renderMessage);
 
 socket.on('receivedMessage', renderMessage);
@@ -71,11 +86,11 @@ const getAndRenderAndSendMessage = () => {
   if (message.length) {
     var messageObject = {
       username,
+      roomName,
       message: message,
     };
   }
 
-  renderMessage([messageObject]);
   socket.emit('sendMessage', messageObject);
 }
 
@@ -92,7 +107,8 @@ const verifyAndDiscardCard = (id) => {
   ).filter((card) => (card.style.opacity !== '0.5'))
     .length;
 
-  if (!availableCards || !availableLifes) socket.emit('sendResult', false);
+  if (!availableCards || !availableLifes)
+    socket.emit('sendResult', { isWinner: false, username, roomName });
 
   if (!availableCards) finishedGame("Acabaram os cards! <br> Você perdeu!");
   else if (!availableLifes) finishedGame("Acabaram as vidas! <br> Você perdeu!");
@@ -113,13 +129,14 @@ const handleDiscardCard = () => {
 };
 
 const handleKickCard = () => {
+  console.log(opponentCard);
   const opponentId = opponentCard && opponentCard.id ? opponentCard.id : null;
   const kickId = Number($("#more-details").attr('name'));
   console.log(`Kicking card id: ${kickId}`);
   console.log(`OpponentId card id: ${opponentId}`);
 
   if (kickId === opponentId) {
-    socket.emit('sendResult', true);
+    socket.emit('sendResult', { isWinner: true, username, roomName });
     finishedGame("Acertou a carta! <br> Você venceu!");
   } else {
     handleModalMessage(`Errou o chute! <br> Sobraram ${availableLifes - 1} vidas!`);
@@ -130,7 +147,7 @@ const handleKickCard = () => {
 };
 
 const handlePassGame = () => {
-  socket.emit('passGame', username);
+  socket.emit('passGame', { username, roomName });
 }
 
 const setInfosToCard = ({ id, name, path, description }) => {
@@ -226,35 +243,45 @@ const sortitionCard = () => {
 }
 
 const handleInitDocument = () => {
-  console.log("Depois do reload");
+  const alreadyInitGame = sessionStorage.getItem('ALREADY_INIT_GAME');
+  if (alreadyInitGame) {
+    sessionStorage.removeItem("ALREADY_INIT_GAME");
+    console.log("Redirecionando página!");
+    window.location = '/';
+  } else {
+    sessionStorage.setItem("ALREADY_INIT_GAME", "true");
 
-  username = sessionStorage.getItem('USERNAME');
+    username = sessionStorage.getItem('USERNAME');
+    roomName = sessionStorage.getItem('ROOMNAME');
+    socket.emit('initGame', { username, roomName });
 
-  socket.emit('initGame', username);
+    for (let index = 0; index < availableLifes; index++) {
+      const div = document.querySelector("div.lifes");
+      const img = document.createElement("img");
 
-  for (let index = 0; index < availableLifes; index++) {
-    const div = document.querySelector("div.lifes");
-    const img = document.createElement("img");
+      img.setAttribute("src", "/assets/heart.png");
+      img.setAttribute("alt", "icone de um coração");
+      div.append(img);
+    }
+    myCard = sortitionCard();
+    document.querySelector("#profile .card img").setAttribute("src", myCard.path);
+    document.querySelector("#profile .card p").innerHTML = myCard.name;
+    socket.emit('sendCards', { myCard, opponentCard, username, roomName });
 
-    img.setAttribute("src", "/assets/heart.png");
-    img.setAttribute("alt", "icone de um coração");
-    div.append(img);
-  }
-  myCard = sortitionCard();
-  document.querySelector("#profile .card img").setAttribute("src", myCard.path);
-  document.querySelector("#profile .card p").innerHTML = myCard.name;
-  socket.emit('sendCards', { myCard, opponentCard });
+    const modal = document.getElementById("modal-box");
+    const modalWelcome = document.getElementById("modal-box-welcome");
+    const span = document.getElementById("btn-close-modal");
+    const btnPassGame = document.getElementById("pass-game");
+    const btnOK = document.querySelector("#modal-box-welcome button");
 
-  const modal = document.getElementById("modal-box");
-  const span = document.getElementById("btn-close-modal");
-  const btnPassGame = document.getElementById("pass-game");
+    span.onclick = () => modal.style.display = "none";
+    btnOK.onclick = () => modalWelcome.style.display = 'none';
+    btnPassGame.onclick = handlePassGame;
 
-  span.onclick = () => modal.style.display = "none";
-  btnPassGame.onclick = handlePassGame;
-
-  window.onclick = (event) => {
-    if (event.target == modal) {
-      modal.style.display = "none";
+    window.onclick = (event) => {
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
     }
   }
 }
@@ -269,7 +296,3 @@ const handleMoreDetailsHoverIn = () => {
 $('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
 $("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);
 $(document).ready(handleInitDocument);
-
-window.onbeforeunload = () => {
-  console.log("Antes do reload");
-};
