@@ -53,13 +53,6 @@ main div {
   width: 80%;
 }
 
-main div img {
-  width: 55px;
-  height: 55px;
-  padding: 5px;
-  margin-right: 10px;
-}
-
 main div p {
   font-weight: bold;
   width: calc(80%-60px);

@@ -24,7 +24,7 @@ const getAndSubmitUser = () => {
   event.preventDefault(); 
   const username = $('input[name=username]').val(); 
   sessionStorage.setItem("USERNAME", username);
-  window.location = '/waiting';
+  window.location = '/rooms';
 }
 
 $('#form-username').submit(getAndSubmitUser);
