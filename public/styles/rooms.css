@@ -1,0 +1,206 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100vh;
+  width: 100vw;
+  color: #293241;
+  font: 500 15px Poppins;
+  background-color: #98C1D9;
+}
+
+main {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+main h2 {
+  text-align: center;
+}
+
+#buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+}
+
+#buttons button {
+  width: 200px;
+  height: 50px;
+  font-size: 16px;
+  background: #98C1D9;
+  text-align: center;
+  line-height: 50px;
+  font-weight: bold;
+  color: #FFF;
+  margin-top: 10px;
+  margin-right: 10px;
+  border-radius: 5px;
+  border: none;
+  border: 1px solid #EE6C4D;
+}
+
+#buttons button:hover {
+  background: #EE6C4D;
+  cursor: pointer;
+}
+
+#new-room {
+  width: 140px;
+  height: 50px;
+  background: #EE6C4D;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border-radius: 5px;
+  border: none;
+}
+
+#new-room p {
+  font-size: 17px;
+  line-height: 50px;
+  font-weight: bold;
+  color: #FFF;
+}
+
+#new-room img {
+  height: 25px;
+  width: 25px;
+}
+
+#new-room:hover {
+  background: #ea8c75;
+  cursor: pointer;
+}
+
+
+/* PARTE DO MODAL */
+
+#modal-confirm {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+#modal-confirm .modal-content {
+  background-color: #98C1D9;
+  padding: 30px;
+  border: 1px solid #888;
+  width: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#modal-confirm .modal-content p {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.modal-content button {
+  width: 100px;
+  height: 50px;
+  font-size: 16px;
+  background: #EE6C4D;
+  text-align: center;
+  line-height: 50px;
+  margin-top: 25px;
+  font-weight: bold;
+  color: #FFF;
+  border-radius: 5px;
+  border: none;
+}
+
+#modal-confirm .modal-content button:hover {
+  background: #ea8c75;
+  cursor: pointer;
+}
+
+#modal-newRoom {
+  display: none; 
+  position: fixed; 
+  z-index: 1; 
+  padding-top: 100px; 
+  left: 0;
+  top: 0;
+  width: 100%; 
+  height: 100%; 
+  overflow: auto; 
+  background-color: rgb(0,0,0); 
+  background-color: rgba(0,0,0,0.4); 
+  flex-direction: column;
+  justify-content: start;
+  align-items: center;
+}
+
+#modal-newRoom .modal-content {
+  background-color: #98C1D9;
+  padding: 30px;
+  border: 1px solid #888;
+  width: 40%;
+}
+
+#modal-newRoom .modal-content div {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+#modal-newRoom #btn-close-modal {
+  color: #aaaaaa;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+#modal-newRoom #btn-close-modal:hover,
+#modal-newRoom #btn-close-modal:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+#modal-newRoom #form-room {
+  height: 250px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
+#modal-newRoom #form-room label {
+  font-weight: bold;
+  font-size: 17px;
+}
+
+#modal-newRoom #form-room input {
+  width: 230px;
+  border: 0;
+  height: 50px;
+  padding: 0 20px;
+  border-radius: 5px;
+  background-color: #E0FBFC;
+  font: 500 14px Poppins;
+}

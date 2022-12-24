@@ -23,3 +23,7 @@ export function pageRules(req, res) {
 export function pageAbout(req, res) {
     return res.render("about.html");
 }
+
+export function pageRooms(req, res) {
+    return res.render("rooms.html");
+}
