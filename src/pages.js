@@ -1,7 +1,7 @@
 import items from '../public/scripts/data.js';
 
 export function pageHome(req, res) {
-    return res.render("home.html");
+    return res.render("index.html");
 }
 
 export function pageWaiting(req, res) {
