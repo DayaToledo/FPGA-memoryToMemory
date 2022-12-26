@@ -1,5 +1,10 @@
 import express from 'express'; 
 import nunjucks from 'nunjucks'; 
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import { 
   pageHome, 
@@ -13,12 +18,15 @@ import {
 
 const app = express(); 
 
-nunjucks.configure('src/views', {
+app.use(express.static("public"));
+app.set('view engine', 'html');
+
+nunjucks.configure(path.join(__dirname, '/views'), {
+    autoescape: true,
     express: app,
     noCache: true,
-})
+});
 
-app.use(express.static("public"));
 app.get("/", pageHome);
 app.get("/waiting", pageWaiting);
 app.get("/game", pageGame);
