@@ -1,5 +1,5 @@
-import server from '../src/http.js'; 
-import '../src/websocket.js';
+import server from './src/http.js'; 
+import './src/websocket.js';
 
 const PORT = process.env.PORT || 3000;
 
