@@ -16,7 +16,7 @@
     },
     {
         "src": "/(.+)(js|css|png|json)",
-        "dest": "public/"
+        "dest": "public/$1"
     }
   ]
 }
