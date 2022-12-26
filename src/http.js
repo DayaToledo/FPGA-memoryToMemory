@@ -17,9 +17,11 @@ import {
 } from './pages.js';
 
 const app = express(); 
+const publicPath = __dirname.split('src')[0];
 
-console.log(path.join(__dirname.split('src')[0], 'public'));
-app.use(express.static(path.join(__dirname.split('src')[0], 'public')));
+app.use('/assets',express.static(path.join(publicPath, 'public/assets')));
+app.use('/scripts',express.static(path.join(publicPath, 'public/scripts')));
+app.use('/styles',express.static(path.join(publicPath, 'public/styles')));
 app.set('view engine', 'html');
 
 nunjucks.configure(path.join(__dirname, '/views'), {
