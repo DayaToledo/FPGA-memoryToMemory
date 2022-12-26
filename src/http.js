@@ -18,7 +18,8 @@ import {
 
 const app = express(); 
 
-app.use(express.static("public"));
+console.log(path.join(__dirname.split('src')[0], 'public'));
+app.use(express.static(path.join(__dirname.split('src')[0], 'public')));
 app.set('view engine', 'html');
 
 nunjucks.configure(path.join(__dirname, '/views'), {
