@@ -21,12 +21,11 @@ const app = express();
 app.set('view engine', 'html');
 
 nunjucks.configure(path.join(__dirname, 'src\\views'), {
-  autoescape: true,
   express: app,
   noCache: true,
 });
 
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 app.get("/", pageHome);
 app.get("/waiting", pageWaiting);
 app.get("/game", pageGame);
