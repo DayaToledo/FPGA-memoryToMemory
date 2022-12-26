@@ -19,9 +19,7 @@ import {
 const app = express(); 
 const publicPath = __dirname.split('src')[0];
 
-app.use('/assets',express.static(path.join(publicPath, 'public/assets')));
-app.use('/scripts',express.static(path.join(publicPath, 'public/scripts')));
-app.use('/styles',express.static(path.join(publicPath, 'public/styles')));
+app.use(express.static(path.join(publicPath, 'public')));
 app.set('view engine', 'html');
 
 nunjucks.configure(path.join(__dirname, '/views'), {
