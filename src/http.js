@@ -19,15 +19,15 @@ import {
 const app = express(); 
 const publicPath = __dirname.split('src')[0];
 
-app.use(express.static(path.join(publicPath, 'public')));
 app.set('view engine', 'html');
 
 nunjucks.configure(path.join(__dirname, '/views'), {
-    autoescape: true,
-    express: app,
-    noCache: true,
+  autoescape: true,
+  express: app,
+  noCache: true,
 });
 
+app.use(express.static(path.join(publicPath, 'public')));
 app.get("/", pageHome);
 app.get("/waiting", pageWaiting);
 app.get("/game", pageGame);
