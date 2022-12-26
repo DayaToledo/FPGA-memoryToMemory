@@ -83,7 +83,6 @@ main {
 }
 
 
-/* PARTE LATERAL */
 
 aside {
   grid-area: "sidebar";
@@ -104,7 +103,6 @@ aside h3 {
   margin-top: 15px;
 }
 
-/* PARTE DO PERFIL - CARTA + VIDAS */
 
 #profile {
   width: 80%;
@@ -126,7 +124,6 @@ aside h3 {
 }
 
 
-/* PARTE DO CHAT */
 
 #chat {
   display: flex;
@@ -206,7 +203,6 @@ button#pass-game {
 }
 
 
-/* PARTE DO MODAL */
 
 #modal-box {
   display: none;

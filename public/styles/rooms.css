@@ -82,9 +82,6 @@ main h2 {
   cursor: pointer;
 }
 
-
-/* PARTE DO MODAL */
-
 #modal-confirm {
   display: none; 
   position: fixed; 

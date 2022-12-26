@@ -57,9 +57,6 @@ button:hover {
   background: #ea8c75;
 }
 
-
-/* PARTE DO MODAL */
-
 #modal-box {
   display: none; 
   position: fixed; 
