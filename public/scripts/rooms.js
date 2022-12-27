@@ -1,5 +1,3 @@
-import siteUrl from "./env.js";
-
 const socket = io(siteUrl);
 
 let roomsWithSpace;

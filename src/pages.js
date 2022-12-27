@@ -25,5 +25,6 @@ export function pageAbout(req, res) {
 }
 
 export function pageRooms(req, res) {
-    return res.render("rooms.html");
+    console.log("url", process.env.VERCEL_URL);
+    return res.render("rooms.html", { siteUrl: process.env.VERCEL_URL || "http://localhost:3000" });
 }
