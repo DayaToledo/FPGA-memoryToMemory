@@ -1,5 +1,6 @@
-import env from '../../tmp/env.json' assert {type: 'json'};
-const socket = io(env.siteURL);
+import getSiteURL from './env.js';
+const siteURL = getSiteURL();
+const socket = io(siteURL);
 
 let roomsWithSpace;
 let existingRooms;

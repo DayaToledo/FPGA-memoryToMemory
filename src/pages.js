@@ -1,6 +1,4 @@
 import items from '../public/data/memories.js';
-import path from 'path';
-import { fileURLToPath } from 'url';
 
 export function pageHome(req, res) {
     return res.render("home.html");
@@ -27,9 +25,6 @@ export function pageAbout(req, res) {
 }
 
 export function pageRooms(req, res) {
-    const __filename = fileURLToPath(import.meta.url);
-    const __dirname = path.dirname(__filename);
-    const rootPath = __dirname.split('src')[0];
-    console.log(rootPath);
-    return res.render("rooms.html");
+    const siteURL = process.env.VERCEL_URL || "http://localhost:3000";
+    return res.render("rooms.html", { siteURL });
 }

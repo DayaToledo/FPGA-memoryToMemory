@@ -40,7 +40,4 @@ app.get("/rooms", pageRooms);
 import { createServer } from 'http';
 const server = createServer(app); 
 
-import { setSiteURL } from './utils.js';
-await setSiteURL();
-
 export default server;
