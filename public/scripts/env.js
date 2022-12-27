@@ -1,3 +1,3 @@
-export default {
-  siteUrl: process.env.VERCEL_URL || "http://localhost:3000"
-};
+const siteUrl = process.env.VERCEL_URL || "http://localhost:3000";
+
+export default siteUrl;

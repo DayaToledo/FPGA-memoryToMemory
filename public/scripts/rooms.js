@@ -1,4 +1,4 @@
-import { siteUrl } from "./env.js";
+import siteUrl from "./env.js";
 
 const socket = io(siteUrl);
 
