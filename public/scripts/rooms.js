@@ -1,4 +1,7 @@
-var socket = io("http://localhost:3000");
+const socketPath = process.env.VERCEL_URL || "http://localhost:3000";
+const socket = io(socketPath);
+
+
 
 let roomsWithSpace;
 let existingRooms;

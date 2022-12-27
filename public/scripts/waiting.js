@@ -1,9 +1,10 @@
-var socket = io('http://localhost:3000'); // conecta com socket do backend
+const socketPath = process.env.VERCEL_URL || "http://localhost:3000";
+const socket = io(socketPath);
 
 let username;
 let roomName;
 
-socket.on('hasOpponent', (opponentName) => { // recebe as mensagens enviadas para todos os sockets da aplicacao
+socket.on('hasOpponent', (opponentName) => {
   console.log({ username, opponentName });
   if (username !== opponentName) {
     socket.emit('sendUsername', { username, roomName });

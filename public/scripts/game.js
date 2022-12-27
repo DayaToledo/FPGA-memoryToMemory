@@ -1,6 +1,7 @@
 import items from "./data.js";
 
-var socket = io('http://localhost:3000');
+const socketPath = process.env.VERCEL_URL || "http://localhost:3000";
+const socket = io(socketPath);
 
 let opponentCard;
 let myCard;
