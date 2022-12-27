@@ -1,6 +1,10 @@
 import express from 'express'; 
 import nunjucks from 'nunjucks'; 
-import { setSiteURL, getPaths } from './utils.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import { 
   pageHome, 
@@ -13,18 +17,17 @@ import {
 } from './pages.js';
 
 const app = express(); 
-const { publicPath, viewsPath } = getPaths();
-console.log({ publicPath, viewsPath });
+const publicPath = __dirname.split('src')[0];
 
 app.set('view engine', 'html');
 
-nunjucks.configure(viewsPath, {
+nunjucks.configure(path.join(__dirname, '/views'), {
   autoescape: true,
   express: app,
   noCache: true,
-});
+}).addGlobal('siteUrl', process.env.VERCEL_URL);
 
-app.use(express.static(publicPath));
+app.use(express.static(path.join(publicPath, 'public')));
 app.get("/", pageHome);
 app.get("/waiting", pageWaiting);
 app.get("/game", pageGame);
@@ -36,6 +39,7 @@ app.get("/rooms", pageRooms);
 import { createServer } from 'http';
 const server = createServer(app); 
 
+import { setSiteURL } from './utils.js';
 await setSiteURL();
 
 export default server;
