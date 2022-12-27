@@ -1,7 +1,5 @@
 import items from "../data/memories.js";
-import env from '../data/env.json' assert {type: 'json'};
-const socket = io(env.siteURL);
-
+let socket;
 let opponentCard;
 let myCard;
 let username;
@@ -10,28 +8,6 @@ let arePlaying;
 
 let availableLifes = 3;
 const discardCards = [];
-
-socket.on('receivedCards', (data) => {
-  console.log(data);
-  if (data.username !== username) {
-    opponentCard = data.myCard;
-    if (!data.opponentCard)
-      socket.emit('sendCards', {
-        myCard: data.myCard,
-        opponentCard: myCard,
-        username: data.username,
-        roomName
-      });
-  } else {
-    ({ opponentCard } = data);
-  }
-});
-
-const handleModalMessage = (message) => {
-  const modal = document.getElementById("modal-box");
-  modal.style.display = "flex";
-  modal.querySelector("p").innerHTML = message;
-}
 
 const finishedGame = (message) => {
   sessionStorage.setItem("FINAL_MESSAGE", message);
@@ -66,17 +42,7 @@ const updatePlayer = ({ players }) => {
   document.querySelector("aside h3").innerHTML = innerHTML;
 }
 
-socket.on('exitGame', () => {
-  finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!");
-});
 
-socket.on('previousMessages', renderMessage);
-
-socket.on('receivedMessage', renderMessage);
-
-socket.on('receivedResult', verifyResult);
-
-socket.on('updatePlayers', updatePlayer);
 
 const getAndRenderAndSendMessage = () => {
   event.preventDefault();
@@ -94,13 +60,16 @@ const getAndRenderAndSendMessage = () => {
   socket.emit('sendMessage', messageObject);
 }
 
-$('#chat').submit(getAndRenderAndSendMessage);
+const changeMoreDetailsVisibility = (visibility) => {
+  if (visibility !== "flex" || arePlaying)
+    $("#more-details").css("display", visibility);
+}
 
 const verifyAndDiscardCard = (id) => {
   discardCards.push(id);
   $(`#${id}`).css("opacity", '0.5');
 
-  $("#more-details").css("display", "none");
+  changeMoreDetailsVisibility("none");
 
   const availableCards = Array.from(
     document.querySelectorAll("#cards .card")
@@ -128,6 +97,14 @@ const handleDiscardCard = () => {
   verifyAndDiscardCard(id);
 };
 
+const handlePassGame = () => socket.emit('passGame', { username, roomName });
+
+const handleModalMessage = (message) => {
+  const modal = document.getElementById("modal-box");
+  modal.style.display = "flex";
+  modal.querySelector("p").innerHTML = message;
+}
+
 const handleKickCard = () => {
   console.log(opponentCard);
   const opponentId = opponentCard && opponentCard.id ? opponentCard.id : null;
@@ -145,10 +122,6 @@ const handleKickCard = () => {
     handlePassGame();
   }
 };
-
-const handlePassGame = () => {
-  socket.emit('passGame', { username, roomName });
-}
 
 const setInfosToCard = ({ id, name, path, description }) => {
   document.querySelector("#more-details").setAttribute("name", id);
@@ -230,8 +203,12 @@ function handleCardHoverIn() {
   addButtonsToCard({ isDisabled });
   setInfosToCard({ id, name, path, description });
 
-  if (arePlaying) $("#more-details").css("display", "flex");
+  changeMoreDetailsVisibility("flex");
 };
+
+const handleCardHoverOut = changeMoreDetailsVisibility("none");
+const handleMoreDetailsHoverOut = changeMoreDetailsVisibility("none");
+const handleMoreDetailsHoverIn = changeMoreDetailsVisibility("flex");
 
 const sortitionCard = () => {
   const totalCards = Object.keys(items).length;
@@ -242,57 +219,90 @@ const sortitionCard = () => {
   return sortedCard;
 }
 
-const handleInitDocument = () => {
-  const alreadyInitGame = sessionStorage.getItem('ALREADY_INIT_GAME');
-  if (alreadyInitGame) {
-    sessionStorage.removeItem("ALREADY_INIT_GAME");
-    console.log("Redirecionando página!");
-    window.location = '/';
-  } else {
-    sessionStorage.setItem("ALREADY_INIT_GAME", "true");
+const reloadAndRedirect = () => {
+  sessionStorage.removeItem("ALREADY_INIT_GAME");
+  console.log("Redirecionando página!");
+  window.location = '/';
+}
 
-    username = sessionStorage.getItem('USERNAME');
-    roomName = sessionStorage.getItem('ROOMNAME');
-    socket.emit('initGame', { username, roomName });
+const setDinamicInfos = () => {
+  sessionStorage.setItem("ALREADY_INIT_GAME", "true");
 
-    for (let index = 0; index < availableLifes; index++) {
-      const div = document.querySelector("div.lifes");
-      const img = document.createElement("img");
+  username = sessionStorage.getItem('USERNAME');
+  roomName = sessionStorage.getItem('ROOMNAME');
+  socket.emit('initGame', { username, roomName });
 
-      img.setAttribute("src", "/assets/heart.png");
-      img.setAttribute("alt", "icone de um coração");
-      div.append(img);
-    }
-    myCard = sortitionCard();
-    document.querySelector("#profile .card img").setAttribute("src", myCard.path);
-    document.querySelector("#profile .card p").innerHTML = myCard.name;
-    socket.emit('sendCards', { myCard, opponentCard, username, roomName });
+  for (let index = 0; index < availableLifes; index++) {
+    const div = document.querySelector("div.lifes");
+    const img = document.createElement("img");
 
-    const modal = document.getElementById("modal-box");
-    const modalWelcome = document.getElementById("modal-box-welcome");
-    const span = document.getElementById("btn-close-modal");
-    const btnPassGame = document.getElementById("pass-game");
-    const btnOK = document.querySelector("#modal-box-welcome button");
+    img.setAttribute("src", "/assets/heart.png");
+    img.setAttribute("alt", "icone de um coração");
+    div.append(img);
+  }
+  myCard = sortitionCard();
+  document.querySelector("#profile .card img").setAttribute("src", myCard.path);
+  document.querySelector("#profile .card p").innerHTML = myCard.name;
+  socket.emit('sendCards', { myCard, opponentCard, username, roomName });
 
-    span.onclick = () => modal.style.display = "none";
-    btnOK.onclick = () => modalWelcome.style.display = 'none';
-    btnPassGame.onclick = handlePassGame;
+  const modal = document.getElementById("modal-box");
+  const modalWelcome = document.getElementById("modal-box-welcome");
+  const span = document.getElementById("btn-close-modal");
+  const btnPassGame = document.getElementById("pass-game");
+  const btnOK = document.querySelector("#modal-box-welcome button");
 
-    window.onclick = (event) => {
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
+  span.onclick = () => modal.style.display = "none";
+  btnOK.onclick = () => modalWelcome.style.display = 'none';
+  btnPassGame.onclick = handlePassGame;
+
+  window.onclick = (event) => {
+    if (event.target == modal) {
+      modal.style.display = "none";
     }
   }
 }
 
-const handleCardHoverOut = () => $("#more-details").css("display", "none");
-const handleMoreDetailsHoverOut = () => $("#more-details").css("display", "none");
-const handleMoreDetailsHoverIn = () => {
-  if (arePlaying) $("#more-details").css("display", "flex");
-};
+const handleInitDocument = () => {
+  const alreadyInitGame = sessionStorage.getItem('ALREADY_INIT_GAME');
+  if (alreadyInitGame) {
+    reloadAndRedirect();
+    return;
+  }
+  
+  const siteURL = document.querySelector("body h6").innerHTML;
+  console.log(siteURL);
+  socket = io(siteURL);
 
+  setDinamicInfos();
+  $('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
+  $("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);
+  $('#chat').submit(getAndRenderAndSendMessage);
 
-$('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
-$("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);
+  socket.on('exitGame', () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
+  
+  socket.on('previousMessages', renderMessage);
+  
+  socket.on('receivedMessage', renderMessage);
+  
+  socket.on('receivedResult', verifyResult);
+  
+  socket.on('updatePlayers', updatePlayer);
+
+  socket.on('receivedCards', (data) => {
+    console.log(data);
+    if (data.username !== username) {
+      opponentCard = data.myCard;
+      if (!data.opponentCard)
+        socket.emit('sendCards', {
+          myCard: data.myCard,
+          opponentCard: myCard,
+          username: data.username,
+          roomName
+        });
+    } else {
+      ({ opponentCard } = data);
+    }
+  });
+}
+
 $(document).ready(handleInitDocument);

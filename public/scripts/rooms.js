@@ -1,7 +1,4 @@
-import getSiteURL from './env.js';
-const siteURL = getSiteURL();
-const socket = io(siteURL);
-
+let socket;
 let roomsWithSpace;
 let existingRooms;
 let roomNameSelected;
@@ -43,13 +40,22 @@ const addButtonsRooms = () => {
   }
 };
 
-socket.on("sendRoomsInfos", (data) => {
-  console.log(data);
-  ({ roomsWithSpace, existingRooms } = data);
-  addButtonsRooms();
-});
+const createNewRoom = () => {
+  event.preventDefault();
+  const roomName = $("#form-room input[name=room]").val();
 
-const handleInitDocument = () => {
+  if (existingRooms.includes(roomName)) {
+    document.querySelector("#form-room input[name=room]").value = '';
+    alert("Sala já existe! Escolha outro nome!");
+  } else {
+    const username = sessionStorage.getItem('USERNAME');
+    sessionStorage.setItem("ROOMNAME", roomName);
+    socket.emit("enterRoom", { username, roomName });
+    window.location = "/waiting";
+  }
+};
+
+const setDinamicInfos = () => {
   sessionStorage.removeItem("ALREADY_INIT_GAME");
 
   const btnNewRoom = document.getElementById("new-room");
@@ -74,23 +80,21 @@ const handleInitDocument = () => {
       modalNewRoom.style.display = "none";
     }
   };
+}
+
+const handleInitDocument = () => {
+  const siteURL = document.querySelector("body h6").innerHTML;
+  console.log(siteURL);
+  socket = io(siteURL);
+  
+  setDinamicInfos();
+  $("#form-room").submit(createNewRoom);
+
+  socket.on("sendRoomsInfos", (data) => {
+    console.log(data);
+    ({ roomsWithSpace, existingRooms } = data);
+    addButtonsRooms();
+  });
 };
 
 $(document).ready(handleInitDocument);
-
-const createNewRoom = () => {
-  event.preventDefault();
-  const roomName = $("#form-room input[name=room]").val();
-
-  if (existingRooms.includes(roomName)) {
-    document.querySelector("#form-room input[name=room]").value = '';
-    alert("Sala já existe! Escolha outro nome!");
-  } else {
-    const username = sessionStorage.getItem('USERNAME');
-    sessionStorage.setItem("ROOMNAME", roomName);
-    socket.emit("enterRoom", { username, roomName });
-    window.location = "/waiting";
-  }
-};
-
-$("#form-room").submit(createNewRoom);
