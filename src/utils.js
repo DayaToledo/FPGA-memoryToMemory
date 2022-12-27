@@ -13,11 +13,9 @@ export function getPaths() {
 
 export async function setSiteURL() {
   const { publicPath } = getPaths();
-  const dataPath = path.join(publicPath, 'data/env.json')
-  console.log({ siteURL: process.env.VERCEL_URL });
-  console.log(process.env);
+  // const dataPath = path.join(publicPath, 'data/env.json')
+  const dataPath = "tmp/env.json";
   const envs = JSON.stringify({ siteURL: process.env.VERCEL_URL || "http://localhost:3000" });
-  console.log(envs);
 
   await fs.promises.writeFile(dataPath, envs, err => {
     if (err) throw err;
