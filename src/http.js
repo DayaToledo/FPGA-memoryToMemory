@@ -14,6 +14,7 @@ import {
 
 const app = express(); 
 const { publicPath, viewsPath } = getPaths();
+console.log({ publicPath, viewsPath });
 
 app.set('view engine', 'html');
 
