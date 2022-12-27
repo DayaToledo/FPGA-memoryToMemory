@@ -1,5 +1,6 @@
-const socketPath = VERCEL_URL || "http://localhost:3000";
-const socket = io(socketPath);
+import { siteUrl } from "./env.js";
+
+const socket = io(siteUrl);
 
 let username;
 let roomName;
