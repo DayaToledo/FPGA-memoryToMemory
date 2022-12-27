@@ -85,7 +85,7 @@ const setDinamicInfos = () => {
 const handleInitDocument = () => {
   const siteURL = document.querySelector("body h6").innerHTML;
   console.log(siteURL);
-  socket = io(siteURL);
+  socket = io(siteURL, { transports : ['websocket'] });
   
   setDinamicInfos();
   $("#form-room").submit(createNewRoom);

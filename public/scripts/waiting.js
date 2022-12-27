@@ -5,7 +5,7 @@ let roomName;
 const handleInitDocument = () => {
   const siteURL = document.querySelector("body h6").innerHTML;
   console.log(siteURL);
-  socket = io(siteURL);
+  socket = io(siteURL, { transports : ['websocket'] });
   
   username = sessionStorage.getItem('USERNAME');
   roomName = sessionStorage.getItem('ROOMNAME');
