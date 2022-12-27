@@ -17,7 +17,7 @@ import {
 } from './pages.js';
 
 const app = express(); 
-const publicPath = __dirname.split('src')[0];
+const rootPath = __dirname.split('src')[0];
 
 app.set('view engine', 'html');
 
@@ -27,7 +27,8 @@ nunjucks.configure(path.join(__dirname, '/views'), {
   noCache: true,
 }).addGlobal('siteUrl', process.env.VERCEL_URL);
 
-app.use(express.static(path.join(publicPath, 'public')));
+app.use(express.static(path.join(rootPath, 'public')));
+app.use('/tmp', express.static(path.join(rootPath, 'tmp')));
 app.get("/", pageHome);
 app.get("/waiting", pageWaiting);
 app.get("/game", pageGame);
