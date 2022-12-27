@@ -1,7 +1,6 @@
-import items from "./data.js";
-import siteUrl from "./env.js";
-
-const socket = io(siteUrl);
+import items from "../data/memories.js";
+import env from '../data/env.json' assert {type: 'json'};
+const socket = io(env.siteURL);
 
 let opponentCard;
 let myCard;

@@ -1,4 +1,4 @@
-import items from '../public/scripts/data.js';
+import items from '../public/data/memories.js';
 
 export function pageHome(req, res) {
     return res.render("home.html");
@@ -25,6 +25,5 @@ export function pageAbout(req, res) {
 }
 
 export function pageRooms(req, res) {
-    console.log("url", process.env.VERCEL_URL);
-    return res.render("rooms.html", { siteUrl: process.env.VERCEL_URL || "http://localhost:3000" });
+    return res.render("rooms.html");
 }
