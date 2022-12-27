@@ -1,4 +1,4 @@
-const socketPath = process.env.VERCEL_URL || "http://localhost:3000";
+const socketPath = VERCEL_URL || "http://localhost:3000";
 const socket = io(socketPath);
 
 
