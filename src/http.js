@@ -25,7 +25,7 @@ nunjucks.configure(path.join(__dirname, '/views'), {
   autoescape: true,
   express: app,
   noCache: true,
-}).addGlobal('siteUrl', process.env.VERCEL_URL);
+});
 
 app.use(express.static(path.join(rootPath, 'public')));
 app.use('/tmp', express.static(path.join(rootPath, 'tmp')));

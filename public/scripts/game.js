@@ -9,6 +9,22 @@ let arePlaying;
 let availableLifes = 3;
 const discardCards = [];
 
+const verifyCards = (data) => {
+  console.log(data);
+  if (data.username !== username) {
+    opponentCard = data.myCard;
+    if (!data.opponentCard)
+      socket.emit('sendCards', {
+        myCard: data.myCard,
+        opponentCard: myCard,
+        username: data.username,
+        roomName
+      });
+  } else {
+    ({ opponentCard } = data);
+  }
+}
+
 const finishedGame = (message) => {
   sessionStorage.setItem("FINAL_MESSAGE", message);
   window.location = '/end';
@@ -27,7 +43,7 @@ const verifyResult = (isWinner) => {
   else finishedGame("O outro jogador perdeu todas as vidas! <br> Você ganhou!");
 }
 
-const updatePlayer = ({ players }) => {
+const updatePlayers = ({ players }) => {
   arePlaying = players[username].playing;
   let innerHTML;
 
@@ -273,11 +289,6 @@ const handleInitDocument = () => {
   console.log(siteURL);
   socket = io(siteURL, { transports : ['websocket'] });
 
-  setDinamicInfos();
-  $('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
-  $("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);
-  $('#chat').submit(getAndRenderAndSendMessage);
-
   socket.on('exitGame', () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
   
   socket.on('previousMessages', renderMessage);
@@ -286,23 +297,14 @@ const handleInitDocument = () => {
   
   socket.on('receivedResult', verifyResult);
   
-  socket.on('updatePlayers', updatePlayer);
+  socket.on('updatePlayers', updatePlayers);
 
-  socket.on('receivedCards', (data) => {
-    console.log(data);
-    if (data.username !== username) {
-      opponentCard = data.myCard;
-      if (!data.opponentCard)
-        socket.emit('sendCards', {
-          myCard: data.myCard,
-          opponentCard: myCard,
-          username: data.username,
-          roomName
-        });
-    } else {
-      ({ opponentCard } = data);
-    }
-  });
+  socket.on('receivedCards', verifyCards);
+
+  setDinamicInfos();
+  $('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
+  $("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);
+  $('#chat').submit(getAndRenderAndSendMessage);
 }
 
 $(document).ready(handleInitDocument);
