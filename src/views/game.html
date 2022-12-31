@@ -8,8 +8,6 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles/game.css" />
-    <title>Memória a Memória</title>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
       integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
@@ -22,10 +20,12 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <link rel="stylesheet" href="/styles/game.css" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <title>Memória a Memória</title>
   </head>
   <body>
     <main>
-      
       <div id="more-details">
         <strong></strong>
         <div id="more-details-description">
@@ -37,10 +37,14 @@
 
       <section id="cards">
         {% for key in keys %}
-          <div class="card" id="{{key}}">
-            <img src="{{items[key].path}}" onerror="this.src='/assets/picture.png'" alt="" />
-            <p>{{items[key].name}}</p>
-          </div>
+        <div class="card" id="{{key}}">
+          <img
+            src="{{items[key].path}}"
+            onerror="this.src='/assets/picture.png'"
+            alt=""
+          />
+          <p>{{items[key].name}}</p>
+        </div>
         {% endfor %}
       </section>
 
@@ -60,7 +64,11 @@
         <form id="chat" autocomplete="off">
           <div class="messages"></div>
           <div id="send-message">
-            <input type="text" name="message" placeholder="Digite sua mensagem" />
+            <input
+              type="text"
+              name="message"
+              placeholder="Digite sua mensagem"
+            />
             <button type="submit">ENVIAR</button>
           </div>
         </form>
@@ -68,8 +76,8 @@
       </aside>
     </main>
 
-    <h6 style="display: none;">{{siteURL}}</h6>
-    
+    <h6 style="display: none">{{siteURL}}</h6>
+
     <div id="modal-box">
       <div class="modal-content">
         <p></p>
@@ -79,17 +87,17 @@
 
     <div id="modal-box-welcome">
       <div class="modal-content-welcome">
-         <p>
-            Seja bem-vindo ao inicio da partida!<br>
-            Utilize o chat para se comunicar com seu oponente!<br><br>
-            Não recarregue a página, pois todo o andamento será perdido <br>
-            e será redirecionado pra página inicial
-          </p>
-          <br><br>
-         <button>OK</button>
+        <p>
+          Seja bem-vindo ao inicio da partida!<br />
+          Utilize o chat para se comunicar com seu oponente!<br /><br />
+          Não recarregue a página, pois todo o andamento será perdido <br />
+          e será redirecionado pra página inicial
+        </p>
+        <br /><br />
+        <button>OK</button>
       </div>
-   </div>
-    
+    </div>
+
     <script type="module" src="/scripts/game.js"></script>
   </body>
 </html>

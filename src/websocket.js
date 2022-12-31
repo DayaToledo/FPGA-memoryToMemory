@@ -141,7 +141,7 @@ io.on('connection', socket => {
         for (const username in rooms[roomName]) {
           if (Object.hasOwnProperty.call(rooms[roomName], username)) {
             if (!['qntdPlayers', 'clientPlaying', 'messages'].includes(username))
-              if (rooms[roomName][username] && rooms[roomName][username].socketId === socket.id) {
+              if (rooms[roomName][username] && rooms[roomName][username]?.socketId === socket.id) {
                 console.log("disconnected socket object", rooms[roomName][username]);
                 rooms[roomName][username].socketId = '';
                 roomNameDisconnected = roomName;
@@ -158,7 +158,7 @@ io.on('connection', socket => {
       if (Object.hasOwnProperty.call(rooms[roomNameDisconnected], username)) {
         if (
           !['qntdPlayers', 'clientPlaying', 'messages', userNameDisconnected].includes(username) && 
-          rooms[roomNameDisconnected][username]?.socketId
+          rooms[roomNameDisconnected][username]?.socketId !== socket.id
         )
           socket.to(rooms[roomNameDisconnected][username].socketId).emit('exitGame');
       }
@@ -171,7 +171,7 @@ io.of("/").adapter.on("create-room", (room) => {
     console.log(`room ${room} was created`);
 });
 
-io.of("/").adapter.on("delete-room", (room) => {
+io.of("/game").adapter.on("delete-room", (room) => {
   if (rooms[room]) {
     delete rooms[room];
     console.log(`room ${room} was deleted`);

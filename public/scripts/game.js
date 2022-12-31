@@ -210,7 +210,7 @@ const getParams = ({ elem }) => {
   return { name, description, path, isDisabled, top, left, id };
 };
 
-function handleCardHoverIn() {
+function handleCardHoverIn () {
   const elem = $(this);
   const { name, description, path, isDisabled, top, left, id } = getParams({ elem });
 
@@ -222,9 +222,9 @@ function handleCardHoverIn() {
   changeMoreDetailsVisibility("flex");
 };
 
-const handleCardHoverOut = changeMoreDetailsVisibility("none");
-const handleMoreDetailsHoverOut = changeMoreDetailsVisibility("none");
-const handleMoreDetailsHoverIn = changeMoreDetailsVisibility("flex");
+function handleCardHoverOut () { changeMoreDetailsVisibility("none") };
+function handleMoreDetailsHoverOut () { changeMoreDetailsVisibility("none") };
+function handleMoreDetailsHoverIn () { changeMoreDetailsVisibility("flex") };
 
 const sortitionCard = () => {
   const totalCards = Object.keys(items).length;
@@ -287,20 +287,20 @@ const handleInitDocument = () => {
   
   const siteURL = document.querySelector("body h6").innerHTML;
   console.log(siteURL);
-  socket = io(siteURL, { transports : ['websocket'] });
+  socket = io(siteURL);
 
   socket.on('exitGame', () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
   
+  socket.on('updatePlayers', updatePlayers);
+  
+  socket.on('receivedCards', verifyCards);
+
   socket.on('previousMessages', renderMessage);
   
   socket.on('receivedMessage', renderMessage);
   
   socket.on('receivedResult', verifyResult);
   
-  socket.on('updatePlayers', updatePlayers);
-
-  socket.on('receivedCards', verifyCards);
-
   setDinamicInfos();
   $('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
   $("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);

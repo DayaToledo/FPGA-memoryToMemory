@@ -8,61 +8,65 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="/styles/rules.css" />
-    <title>Memória a Memória</title>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
       integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <link rel="stylesheet" href="/styles/rules.css" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <title>Memória a Memória</title>
   </head>
   <body>
     <main>
       <h1>Regras do jogo</h1>
       <div>
         <img src="/assets/gamepad.png" alt="" />
+        <p>Cada jogador possui um conjunto de 28 cartas, todas habilitadas.</p>
+      </div>
+      <div>
+        <img src="/assets/gamepad.png" alt="" />
         <p>
-          Cada jogador possui um conjunto de 28 cartas, todas habilitadas.
+          Uma carta é sorteada para cada jogador sem que seu oponente saiba qual
+          foi sorteada. O objetivo do jogo é adivinhar a carta do oponente.
         </p>
       </div>
       <div>
         <img src="/assets/gamepad.png" alt="" />
         <p>
-          Uma carta é sorteada para cada jogador sem que seu oponente saiba qual foi sorteada.
-          O objetivo do jogo é adivinhar a carta do oponente.
+          Os jogadores devem, alternadamente, fazer perguntas um ao outro a fim
+          de descobrir a carta do outro. As perguntas devem ser possíveis de
+          responder com "sim" ou "não" somente.
         </p>
       </div>
       <div>
         <img src="/assets/gamepad.png" alt="" />
         <p>
-          Os jogadores devem, alternadamente, fazer perguntas um ao outro a fim de descobrir a carta do outro.
-          As perguntas devem ser possíveis de responder com "sim" ou "não" somente.
+          Ao fazer perguntas pro oponente, o jogador pode descartar quantas
+          cartas quiser, que julgue incorretas de acordo com a resposta obtida.
         </p>
       </div>
       <div>
         <img src="/assets/gamepad.png" alt="" />
         <p>
-          Ao fazer perguntas pro oponente, o jogador pode descartar quantas cartas quiser, que julgue incorretas de acordo com a resposta obtida.
+          Além de descartar cartas, o jogador pode realizar uma tentativa de
+          acerto, mas apenas com 3 chances de erro.
         </p>
       </div>
       <div>
         <img src="/assets/gamepad.png" alt="" />
         <p>
-          Além de descartar cartas, o jogador pode realizar uma tentativa de acerto, mas apenas com 3 chances de erro.
+          Ao terminar de fazer a sua pergunta e/ou descartar as cartas, o
+          jogador deve passar a vez pro oponente.
         </p>
       </div>
       <div>
         <img src="/assets/gamepad.png" alt="" />
         <p>
-          Ao terminar de fazer a sua pergunta e/ou descartar as cartas, o jogador deve passar a vez pro oponente.
-        </p>
-      </div>
-      <div>
-        <img src="/assets/gamepad.png" alt="" />
-        <p>
-          Vence o jogo quem primeiro acertar a carta do outro. <br>
-          Caso o jogador descarte todas as cartas ou erre todas as 3 tentativas de chute, ele terá perdido.
+          Vence o jogo quem primeiro acertar a carta do outro. <br />
+          Caso o jogador descarte todas as cartas ou erre todas as 3 tentativas
+          de chute, ele terá perdido.
         </p>
       </div>
       <button type="submit" id="restart">VOLTAR AO COMEÇO</button>

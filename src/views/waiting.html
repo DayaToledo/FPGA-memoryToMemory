@@ -8,9 +8,6 @@
       href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;700&amp;family=Poppins:wght@400;600&amp;display=swap"
       rel="stylesheet"
     />
-    <!-- <link rel="stylesheet" href="/styles/home.css" /> -->
-    <link rel="stylesheet" href="/styles/waiting.css" />
-    <title>Memória a Memória</title>
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
       integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
@@ -23,13 +20,23 @@
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>
+    <link rel="stylesheet" href="/styles/waiting.css" />
+    <title>Memória a Memória</title>
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
   </head>
   <body>
     <main>
       <h1>Esperando por um oponente</h1>
-      <lottie-player class="loading" src="/assets/loading_orange.json"  background="transparent"  speed="0.5" loop  autoplay></lottie-player>
+      <lottie-player
+        class="loading"
+        src="/assets/loading_orange.json"
+        background="transparent"
+        speed="0.5"
+        loop
+        autoplay
+      ></lottie-player>
     </main>
-    <h6 style="display: none;">{{siteURL}}</h6>
+    <h6 style="display: none">{{siteURL}}</h6>
     <script type="module" src="/scripts/waiting.js"></script>
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js"></script>
   </body>
