@@ -14,7 +14,7 @@ const verifyCards = (data) => {
   if (data.username !== username) {
     opponentCard = data.myCard;
     if (!data.opponentCard)
-      socket.emit('sendCards', {
+      socket.emit("sendCards", {
         myCard: data.myCard,
         opponentCard: myCard,
         username: data.username,
@@ -27,13 +27,13 @@ const verifyCards = (data) => {
 
 const finishedGame = (message) => {
   sessionStorage.setItem("FINAL_MESSAGE", message);
-  window.location = '/end';
+  window.location = "/end";
 }
 
 const renderMessage = (messages) => {
   for (let message of messages) {
     const className = message.username === username ? "message my" : "message";
-    $('.messages').append(`<div class="${className}"><strong>${message.username}</strong><br>${message.message}</div>`);
+    $(".messages").append(`<div class="${className}"><strong>${message.username}</strong><br>${message.message}</div>`);
   }
 };
 
@@ -62,8 +62,8 @@ const updatePlayers = ({ players }) => {
 
 const getAndRenderAndSendMessage = () => {
   event.preventDefault();
-  var message = $('input[name=message]').val();
-  document.querySelector('input[name=message]').value = '';
+  var message = $("input[name=message]").val();
+  document.querySelector("input[name=message]").value = "";
 
   if (message.length) {
     var messageObject = {
@@ -73,27 +73,27 @@ const getAndRenderAndSendMessage = () => {
     };
   }
 
-  socket.emit('sendMessage', messageObject);
+  socket.emit("sendMessage", messageObject);
 }
 
-const changeMoreDetailsVisibility = (visibility) => {
-  if (visibility !== "flex" || arePlaying)
+const changeMoreDetailsVisibility = (visibility, isProfileCard) => {
+  if (visibility !== "flex" || arePlaying || isProfileCard)
     $("#more-details").css("display", visibility);
 }
 
 const verifyAndDiscardCard = (id) => {
   discardCards.push(id);
-  $(`#${id}`).css("opacity", '0.5');
+  $(`#${id}`).css("opacity", "0.5");
 
   changeMoreDetailsVisibility("none");
 
   const availableCards = Array.from(
     document.querySelectorAll("#cards .card")
-  ).filter((card) => (card.style.opacity !== '0.5'))
+  ).filter((card) => (card.style.opacity !== "0.5"))
     .length;
 
   if (!availableCards || !availableLifes)
-    socket.emit('sendResult', { isWinner: false, username, roomName });
+    socket.emit("sendResult", { isWinner: false, username, roomName });
 
   if (!availableCards) finishedGame("Acabaram os cards! <br> Você perdeu!");
   else if (!availableLifes) finishedGame("Acabaram as vidas! <br> Você perdeu!");
@@ -108,12 +108,12 @@ const retireLife = () => {
 };
 
 const handleDiscardCard = () => {
-  const id = $("#more-details").attr('name');
+  const id = $("#more-details").attr("name");
   console.log(`Discarding card id: ${id}`);
   verifyAndDiscardCard(id);
 };
 
-const handlePassGame = () => socket.emit('passGame', { username, roomName });
+const handlePassGame = () => socket.emit("passGame", { username, roomName });
 
 const handleModalMessage = (message) => {
   const modal = document.getElementById("modal-box");
@@ -124,12 +124,12 @@ const handleModalMessage = (message) => {
 const handleKickCard = () => {
   console.log(opponentCard);
   const opponentId = opponentCard && opponentCard.id ? opponentCard.id : null;
-  const kickId = Number($("#more-details").attr('name'));
+  const kickId = Number($("#more-details").attr("name"));
   console.log(`Kicking card id: ${kickId}`);
   console.log(`OpponentId card id: ${opponentId}`);
 
   if (kickId === opponentId) {
-    socket.emit('sendResult', { isWinner: true, username, roomName });
+    socket.emit("sendResult", { isWinner: true, username, roomName });
     finishedGame("Acertou a carta! <br> Você venceu!");
   } else {
     handleModalMessage(`Errou o chute! <br> Sobraram ${availableLifes - 1} vidas!`);
@@ -174,8 +174,8 @@ const addButtonsToCard = ({ isDisabled }) => {
 };
 
 const positionCard = ({ top, left }) => {
-  const cardHeight = Number($("#more-details").css('height').replace("px", ""));
-  const bodyHeight = Number($("body").css('height').replace("px", ""));
+  const cardHeight = Number($("#more-details").css("height").replace("px", ""));
+  const bodyHeight = Number($("body").css("height").replace("px", ""));
 
   top = top > (bodyHeight - cardHeight) ? (bodyHeight - cardHeight) - 10 : top;
 
@@ -200,14 +200,39 @@ const clearElements = ({ isDisabled }) => {
 };
 
 const getParams = ({ elem }) => {
-  const id = elem.prop('id');
-  const isDisabled = elem.css('opacity') === '0.5';
+  const id = elem.prop("id");
+  const isDisabled = elem.css("opacity") === "0.5";
   const left = elem.offset().left;
   let top = elem.offset().top;
 
   const { name, description, path } = items[id];
 
   return { name, description, path, isDisabled, top, left, id };
+};
+
+function handleCardProfileHoverIn () {
+  const id = $(this).prop("id");
+  let top = $(this).offset().top;
+  const isProfile = $(this).parent().text().includes("Sua carta:");
+
+  console.log(isProfile);
+  const { name, description, path } = myCard;
+
+  clearElements({ isDisabled: true });
+  
+  const cardHeight = Number($("#more-details").css("height").replace("px", ""));
+  const cardWidth = Number($("#more-details").css("width").replace("px", ""));
+  const bodyHeight = Number($("body").css("height").replace("px", ""));
+  const bodyWidth = Number($("body").css("width").replace("px", ""));
+
+  const newTop = top > (bodyHeight - cardHeight) ? (bodyHeight - cardHeight) - 10 : top;
+  const newLeft = (bodyWidth - cardWidth);
+
+  $("#more-details").css("top", newTop);
+  $("#more-details").css("left", newLeft);
+  setInfosToCard({ id, name, path, description });
+
+  changeMoreDetailsVisibility("flex", isProfile);
 };
 
 function handleCardHoverIn () {
@@ -224,7 +249,10 @@ function handleCardHoverIn () {
 
 function handleCardHoverOut () { changeMoreDetailsVisibility("none") };
 function handleMoreDetailsHoverOut () { changeMoreDetailsVisibility("none") };
-function handleMoreDetailsHoverIn () { changeMoreDetailsVisibility("flex") };
+function handleMoreDetailsHoverIn () {
+  const isProfile = $(this).parent().text().includes("Sua carta:");
+  changeMoreDetailsVisibility("flex", isProfile); 
+};
 
 const sortitionCard = () => {
   const totalCards = Object.keys(items).length;
@@ -236,17 +264,19 @@ const sortitionCard = () => {
 }
 
 const reloadAndRedirect = () => {
+  document.querySelector("#modal-box-bye button").onclick = () => window.location = "/";
+  document.getElementById("modal-box-welcome").style.display = "none";
+  document.getElementById("modal-box-bye").style.display = "flex";
   sessionStorage.removeItem("ALREADY_INIT_GAME");
-  console.log("Redirecionando página!");
-  window.location = '/';
+  socket.emit("disconnectGame", { username, roomName });
 }
 
 const setDinamicInfos = () => {
   sessionStorage.setItem("ALREADY_INIT_GAME", "true");
 
-  username = sessionStorage.getItem('USERNAME');
-  roomName = sessionStorage.getItem('ROOMNAME');
-  socket.emit('initGame', { username, roomName });
+  username = sessionStorage.getItem("USERNAME");
+  roomName = sessionStorage.getItem("ROOMNAME");
+  socket.emit("initGame", { username, roomName });
 
   for (let index = 0; index < availableLifes; index++) {
     const div = document.querySelector("div.lifes");
@@ -259,16 +289,17 @@ const setDinamicInfos = () => {
   myCard = sortitionCard();
   document.querySelector("#profile .card img").setAttribute("src", myCard.path);
   document.querySelector("#profile .card p").innerHTML = myCard.name;
-  socket.emit('sendCards', { myCard, opponentCard, username, roomName });
+  document.querySelector("#profile .card").setAttribute("id", myCard.id);
+  socket.emit("sendCards", { myCard, opponentCard, username, roomName });
 
   const modal = document.getElementById("modal-box");
   const modalWelcome = document.getElementById("modal-box-welcome");
   const span = document.getElementById("btn-close-modal");
   const btnPassGame = document.getElementById("pass-game");
-  const btnOK = document.querySelector("#modal-box-welcome button");
+  const btnOKWelcome = document.querySelector("#modal-box-welcome button");
 
   span.onclick = () => modal.style.display = "none";
-  btnOK.onclick = () => modalWelcome.style.display = 'none';
+  btnOKWelcome.onclick = () => modalWelcome.style.display = "none";
   btnPassGame.onclick = handlePassGame;
 
   window.onclick = (event) => {
@@ -279,7 +310,7 @@ const setDinamicInfos = () => {
 }
 
 const handleInitDocument = () => {
-  const alreadyInitGame = sessionStorage.getItem('ALREADY_INIT_GAME');
+  const alreadyInitGame = sessionStorage.getItem("ALREADY_INIT_GAME");
   if (alreadyInitGame) {
     reloadAndRedirect();
     return;
@@ -289,22 +320,23 @@ const handleInitDocument = () => {
   console.log(siteURL);
   socket = io(siteURL);
 
-  socket.on('exitGame', () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
+  socket.on("exitGame", () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
   
-  socket.on('updatePlayers', updatePlayers);
+  socket.on("updatePlayers", updatePlayers);
   
-  socket.on('receivedCards', verifyCards);
+  socket.on("receivedCards", verifyCards);
 
-  socket.on('previousMessages', renderMessage);
+  socket.on("previousMessages", renderMessage);
   
-  socket.on('receivedMessage', renderMessage);
+  socket.on("receivedMessage", renderMessage);
   
-  socket.on('receivedResult', verifyResult);
+  socket.on("receivedResult", verifyResult);
   
   setDinamicInfos();
-  $('#cards .card').hover(handleCardHoverIn, handleCardHoverOut);
+  $("#cards .card").hover(handleCardHoverIn, handleCardHoverOut);
+  $("#profile .card").hover(handleCardProfileHoverIn, handleCardHoverOut);
   $("#more-details").hover(handleMoreDetailsHoverIn, handleMoreDetailsHoverOut);
-  $('#chat').submit(getAndRenderAndSendMessage);
+  $("#chat").submit(getAndRenderAndSendMessage);
 }
 
 $(document).ready(handleInitDocument);
