@@ -132,7 +132,7 @@ io.on("connection", socket => {
   });
 
   socket.on("disconnectGame", ({ username, roomName }) => {
-    console.log("disconnected player", rooms[roomName][username]);
+    console.log(`Disconnected player ${username} in the room ${roomName}`);
     rooms[roomName][username].socketId = "";
     const notPlayers = ["qntdPlayers", "clientPlaying", "messages", username];
 

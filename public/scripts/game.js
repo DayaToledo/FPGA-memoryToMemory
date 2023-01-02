@@ -10,7 +10,7 @@ let availableLifes = 3;
 const discardCards = [];
 
 const verifyCards = (data) => {
-  console.log(data);
+  // console.log(data);
   if (data.username !== username) {
     opponentCard = data.myCard;
     if (!data.opponentCard)
@@ -38,7 +38,7 @@ const renderMessage = (messages) => {
 };
 
 const verifyResult = (isWinner) => {
-  console.log(isWinner);
+  // console.log(isWinner);
   if (isWinner) finishedGame("O outro jogador acertou sua carta! <br> Você perdeu!");
   else finishedGame("O outro jogador perdeu todas as vidas! <br> Você ganhou!");
 }
@@ -122,7 +122,7 @@ const handleModalMessage = (message) => {
 }
 
 const handleKickCard = () => {
-  console.log(opponentCard);
+  // console.log(opponentCard);
   const opponentId = opponentCard && opponentCard.id ? opponentCard.id : null;
   const kickId = Number($("#more-details").attr("name"));
   console.log(`Kicking card id: ${kickId}`);
@@ -262,11 +262,13 @@ const sortitionCard = () => {
 }
 
 const reloadAndRedirect = () => {
-  document.querySelector("#modal-box-bye button").onclick = () => window.location = "/";
+  document.querySelector("#modal-box-bye button").onclick = () =>{ 
+    socket.emit("disconnectGame", { username, roomName });
+    window.location = "/"
+  };
   document.getElementById("modal-box-welcome").style.display = "none";
   document.getElementById("modal-box-bye").style.display = "flex";
   sessionStorage.removeItem("ALREADY_INIT_GAME");
-  socket.emit("disconnectGame", { username, roomName });
 }
 
 const setDinamicInfos = () => {
