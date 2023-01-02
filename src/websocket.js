@@ -115,6 +115,9 @@ io.on("connection", socket => {
 
   socket.on("sendMessage", data => {
     const { roomName } = data;
+    console.log(`Mensagem recebida no server`);
+    console.log(data);
+
     delete data.roomName;
     rooms[roomName].messages.push(data);
     io.to(roomName).emit("receivedMessage", [data]);

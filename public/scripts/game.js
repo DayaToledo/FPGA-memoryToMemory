@@ -31,6 +31,8 @@ const finishedGame = (message) => {
 }
 
 const renderMessage = (messages) => {
+  console.log(`Mensagem recebida no client`);
+  console.log(messages);
   for (let message of messages) {
     const className = message.username === username ? "message my" : "message";
     $(".messages").append(`<div class="${className}"><strong>${message.username}</strong><br>${message.message}</div>`);
