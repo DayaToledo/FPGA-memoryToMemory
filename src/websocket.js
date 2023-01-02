@@ -156,8 +156,6 @@ io.of("/").adapter.on("create-room", (room) => {
 });
 
 io.of("/game").adapter.on("delete-room", (room) => {
-  if (rooms[room]) {
-    delete rooms[room];
+  if (rooms[room])
     console.log(`room ${room} was deleted`);
-  }
 });

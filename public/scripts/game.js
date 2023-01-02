@@ -62,18 +62,18 @@ const updatePlayers = ({ players }) => {
 
 const getAndRenderAndSendMessage = () => {
   event.preventDefault();
-  var message = $("input[name=message]").val();
-  document.querySelector("input[name=message]").value = "";
+  const message = document.querySelector("input[name=message]").value;
 
   if (message.length) {
     var messageObject = {
       username,
       roomName,
-      message: message,
+      message,
     };
-  }
 
-  socket.emit("sendMessage", messageObject);
+    socket.emit("sendMessage", messageObject);
+  } 
+  document.querySelector("input[name=message]").value = "";
 }
 
 const changeMoreDetailsVisibility = (visibility, isProfileCard) => {
@@ -214,8 +214,6 @@ function handleCardProfileHoverIn () {
   const id = $(this).prop("id");
   let top = $(this).offset().top;
   const isProfile = $(this).parent().text().includes("Sua carta:");
-
-  console.log(isProfile);
   const { name, description, path } = myCard;
 
   clearElements({ isDisabled: true });
