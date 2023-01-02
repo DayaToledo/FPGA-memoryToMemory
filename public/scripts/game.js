@@ -313,15 +313,15 @@ const setDinamicInfos = () => {
 }
 
 const handleInitDocument = () => {
+  const siteURL = document.querySelector("body h6").innerHTML;
+  console.log(siteURL);
+  socket = io(siteURL);
+
   const alreadyInitGame = sessionStorage.getItem("ALREADY_INIT_GAME");
   if (alreadyInitGame) {
     reloadAndRedirect();
     return;
   }
-  
-  const siteURL = document.querySelector("body h6").innerHTML;
-  console.log(siteURL);
-  socket = io(siteURL);
 
   socket.on("exitGame", () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
   
