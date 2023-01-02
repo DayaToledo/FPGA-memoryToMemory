@@ -64,6 +64,7 @@ const getAndRenderAndSendMessage = () => {
   event.preventDefault();
   const message = document.querySelector("input[name=message]").value;
 
+  console.log(`Mensagem digitada: ${message}`);
   if (message.length) {
     var messageObject = {
       username,
