@@ -82,8 +82,6 @@ main {
   justify-content: space-around;
 }
 
-
-
 aside {
   grid-area: "sidebar";
   height: 100%;
@@ -103,7 +101,6 @@ aside h3 {
   margin-top: 15px;
 }
 
-
 #profile {
   width: 80%;
   margin-top: 15px;
@@ -122,8 +119,6 @@ aside h3 {
   height: 50px;
   width: 50px;
 }
-
-
 
 #chat {
   display: flex;

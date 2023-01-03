@@ -7,10 +7,9 @@ let rooms = {};
 let qntdSockets = 0;
 
 const getPlayerNames = (roomName) =>
-  Object.keys(rooms[roomName])
-    .filter((key) =>
-      !["qntdPlayers", "clientPlaying", "messages"].includes(key)
-    );
+  Object.keys(rooms[roomName]).filter((key) =>
+    !["qntdPlayers", "clientPlaying", "messages"].includes(key)
+  );
 
 const sortitionFirstPlayer = ({ roomName }) => {
   const playerNames = getPlayerNames(roomName);
@@ -20,21 +19,17 @@ const sortitionFirstPlayer = ({ roomName }) => {
 };
 
 const setAllFalse = ({ roomName }) => {
-  for (const username in rooms[roomName]) {
-    if (Object.hasOwnProperty.call(rooms[roomName], username)) {
+  for (const username in rooms[roomName])
+    if (Object.hasOwnProperty.call(rooms[roomName], username))
       if (!["qntdPlayers", "clientPlaying", "messages"].includes(username))
         rooms[roomName][username].playing = false;
-    }
-  }
 }
 
 const setOtherTrue = ({ username, roomName }) => {
-  for (const name in rooms[roomName]) {
-    if (Object.hasOwnProperty.call(rooms[roomName], name)) {
+  for (const name in rooms[roomName])
+    if (Object.hasOwnProperty.call(rooms[roomName], name))
       if (!["qntdPlayers", "clientPlaying", "messages", username].includes(name))
         rooms[roomName][name].playing = true;
-    }
-  }
 }
 
 const getRoomNames = () => Object.keys(rooms);
@@ -90,7 +85,7 @@ io.on("connection", socket => {
 
   socket.on("initGame", ({ username, roomName }) => {
     socket.join(roomName);
-    console.log({ qntdSockets, conectedSocket: socket.id });
+    console.log(`>> The player ${username} was connected in the room ${roomName}`);
 
     rooms[roomName][username].socketId = socket.id;
     console.log(rooms[roomName]);
@@ -115,7 +110,7 @@ io.on("connection", socket => {
 
   socket.on("sendMessage", data => {
     const { roomName } = data;
-    console.log(`Mensagem recebida no server`);
+    console.log(`>> Message received by server:`);
     console.log(data);
 
     delete data.roomName;
@@ -135,30 +130,28 @@ io.on("connection", socket => {
   });
 
   socket.on("disconnectGame", ({ username, roomName }) => {
-    console.log(`Disconnected player ${username} in the room ${roomName}`);
+    console.log(`>> Disconnected player ${username} in the room ${roomName}`);
     rooms[roomName][username].socketId = "";
     const notPlayers = ["qntdPlayers", "clientPlaying", "messages", username];
 
-    for (const name in rooms[roomName]) {
-      if (Object.hasOwnProperty.call(rooms[roomName], name)) {
+    for (const name in rooms[roomName])
+      if (Object.hasOwnProperty.call(rooms[roomName], name))
         if (!notPlayers.includes(name) && rooms[roomName][name]?.socketId)
           socket.to(rooms[roomName][name].socketId).emit("exitGame");
-      }
-    }
   });
 
-  socket.on("disconnect", () => {
+  socket.on("disconnect", (reason) => {
     qntdSockets--;
-    console.log({ qntdSockets, disconnectedSocket: socket.id });
+    console.log({ qntdSockets, disconnectedSocket: socket.id, reason });
   });
 });
 
 io.of("/").adapter.on("create-room", (room) => {
   if (rooms[room])
-    console.log(`room ${room} was created`);
+    console.log(`>> Room ${room} was created`);
 });
 
 io.of("/game").adapter.on("delete-room", (room) => {
   if (rooms[room])
-    console.log(`room ${room} was deleted`);
+    console.log(`>> Room ${room} was deleted`);
 });
