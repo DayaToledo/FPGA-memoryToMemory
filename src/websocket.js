@@ -48,6 +48,7 @@ const getRoomsWithSpace = () => {
 }
 
 io.on("connection", socket => {
+  console.log(socket.username);
   qntdSockets++;
   console.log({ qntdSockets, connectedSocket: socket.id });
 
@@ -85,6 +86,8 @@ io.on("connection", socket => {
 
   socket.on("initGame", ({ username, roomName }) => {
     socket.join(roomName);
+    socket.roomName = roomName;
+    socket.username = username;
     console.log(`>> The player ${username} was connected in the room ${roomName}`);
 
     rooms[roomName][username].socketId = socket.id;
