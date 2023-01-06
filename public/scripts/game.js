@@ -311,7 +311,7 @@ const setDinamicInfos = () => {
 }
 
 const handleInitDocument = () => {
-  const siteURL = document.querySelector("body h6").innerHTML + "/game";
+  const siteURL = document.querySelector("body h6").innerHTML + "game";
   console.log(siteURL);
   socket = io(siteURL);
   username = sessionStorage.getItem("USERNAME");

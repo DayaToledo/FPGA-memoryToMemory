@@ -83,7 +83,7 @@ const setDinamicInfos = () => {
 }
 
 const handleInitDocument = () => {
-  const siteURL = document.querySelector("body h6").innerHTML + "/rooms";
+  const siteURL = document.querySelector("body h6").innerHTML + "rooms";
   console.log(siteURL);
   socket = io(siteURL, { transports : ['websocket'] });
   
