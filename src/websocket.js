@@ -100,7 +100,7 @@ io.of("/game").on("connection", (socket) => {
   socket.on("setUserAndRoom", ({ username, roomName }) => {
     socket.join(roomName);
     console.log(`>> The player ${username} was connected in the room ${roomName}`);
-    rooms[roomName][username].socketId = socket.id;
+    if (rooms[roomName] && rooms[roomName][username]) rooms[roomName][username].socketId = socket.id;
   });
 
   socket.emit("getUserAndRoom");
