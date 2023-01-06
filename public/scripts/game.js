@@ -277,8 +277,6 @@ const reloadAndRedirect = () => {
 const setDinamicInfos = () => {
   sessionStorage.setItem("ALREADY_INIT_GAME", "true");
 
-  username = sessionStorage.getItem("USERNAME");
-  roomName = sessionStorage.getItem("ROOMNAME");
   socket.emit("initGame", { username, roomName });
 
   for (let index = 0; index < availableLifes; index++) {
@@ -316,12 +314,18 @@ const handleInitDocument = () => {
   const siteURL = document.querySelector("body h6").innerHTML;
   console.log(siteURL);
   socket = io(siteURL);
+  username = sessionStorage.getItem("USERNAME");
+  roomName = sessionStorage.getItem("ROOMNAME");
 
   const alreadyInitGame = sessionStorage.getItem("ALREADY_INIT_GAME");
   if (alreadyInitGame) {
     reloadAndRedirect();
     return;
   }
+
+  socket.on("getUserAndRoom", () => { 
+    socket.emit("setUserAndRoom", { username, roomName });
+  });
 
   socket.on("exitGame", () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
   

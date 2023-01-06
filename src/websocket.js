@@ -4,7 +4,6 @@ import { Server } from "socket.io";
 const io = new Server(server);
 
 let rooms = {};
-let qntdSockets = 0;
 
 const getPlayerNames = (roomName) =>
   Object.keys(rooms[roomName]).filter((key) =>
@@ -47,11 +46,9 @@ const getRoomsWithSpace = () => {
   return roomsWithSpace;
 }
 
-io.on("connection", socket => {
-  console.log(socket.username);
-  qntdSockets++;
-  console.log({ qntdSockets, connectedSocket: socket.id });
-
+io.of("/rooms").on("connection", (socket) => {
+  console.log(`>> Connected socket ${socket.id} in /rooms`);
+  
   socket.on("getRoomsInfos", () => {
     const roomsWithSpace = getRoomsWithSpace();
     const existingRooms = getRoomNames();
@@ -78,16 +75,38 @@ io.on("connection", socket => {
     const existingRooms = getRoomNames();
     socket.broadcast.emit("sendRoomsInfos", { roomsWithSpace, existingRooms });
   });
+  
+  socket.on("disconnect", (reason) => {
+    console.log(`>> Disconnect socket ${socket.id} in /rooms by reason: ${reason}`);
+  });
+});
 
+io.of("/waiting").on("connection", (socket) => {
+  console.log(`>> Connected socket ${socket.id} in /waiting`);
+  
   socket.on("sendUsername", ({ username, roomName }) => {
     socket.join(roomName);
     socket.to(roomName).emit("hasOpponent", username);
   });
+  
+  socket.on("disconnect", (reason) => {
+    console.log(`>> Disconnect socket ${socket.id} in /waiting by reason: ${reason}`);
+  });
+});
+
+io.of("/game").on("connection", (socket) => {
+  console.log(`>> Connected socket ${socket.id} in /game`);
+  
+  socket.on("setUserAndRoom", ({ username, roomName }) => {
+    socket.join(roomName);
+    console.log(`>> The player ${username} was connected in the room ${roomName}`);
+    rooms[roomName][username].socketId = socket.id;
+  });
+
+  socket.emit("getUserAndRoom");
 
   socket.on("initGame", ({ username, roomName }) => {
     socket.join(roomName);
-    socket.roomName = roomName;
-    socket.username = username;
     console.log(`>> The player ${username} was connected in the room ${roomName}`);
 
     rooms[roomName][username].socketId = socket.id;
@@ -142,10 +161,9 @@ io.on("connection", socket => {
         if (!notPlayers.includes(name) && rooms[roomName][name]?.socketId)
           socket.to(rooms[roomName][name].socketId).emit("exitGame");
   });
-
+  
   socket.on("disconnect", (reason) => {
-    qntdSockets--;
-    console.log({ qntdSockets, disconnectedSocket: socket.id, reason });
+    console.log(`>> Disconnect socket ${socket.id} in /game by reason: ${reason}`);
   });
 });
 
