@@ -324,7 +324,8 @@ const handleInitDocument = () => {
   }
 
   socket.on("getUserAndRoom", () => { 
-    socket.emit("setUserAndRoom", { username, roomName });
+    if (alreadyInitGame) 
+      socket.emit("setUserAndRoom", { username, roomName });
   });
 
   socket.on("exitGame", () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
