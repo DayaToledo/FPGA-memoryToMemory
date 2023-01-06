@@ -5,12 +5,12 @@ export function pageHome(req, res) {
 }
 
 export function pageWaiting(req, res) {
-    const siteURL = process.env.APP_URL || "http://localhost:3000";
+    const siteURL = process.env.APP_URL || "http://localhost:3000/";
     return res.render("waiting.html", { siteURL });
 }
 
 export function pageGame(req, res) {
-    const siteURL = process.env.APP_URL || "http://localhost:3000";
+    const siteURL = process.env.APP_URL || "http://localhost:3000/";
     return res.render("game.html", { items, keys: Object.keys(items), siteURL });
 }
 
@@ -27,6 +27,6 @@ export function pageAbout(req, res) {
 }
 
 export function pageRooms(req, res) {
-    const siteURL = process.env.APP_URL || "http://localhost:3000";
+    const siteURL = process.env.APP_URL || "http://localhost:3000/";
     return res.render("rooms.html", { siteURL });
 }

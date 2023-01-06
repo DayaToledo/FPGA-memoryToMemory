@@ -312,22 +312,25 @@ const setDinamicInfos = () => {
 
 const handleInitDocument = () => {
   const siteURL = document.querySelector("body h6").innerHTML + "game";
-  console.log(siteURL);
-  socket = io(siteURL);
   username = sessionStorage.getItem("USERNAME");
   roomName = sessionStorage.getItem("ROOMNAME");
+
+  console.log(siteURL);
+  socket = io(siteURL, { 
+    transports : ['websocket'],
+    query: {
+      username,
+      roomName,
+    },
+  });
+
 
   const alreadyInitGame = sessionStorage.getItem("ALREADY_INIT_GAME");
   if (alreadyInitGame) {
     reloadAndRedirect();
     return;
   }
-
-  socket.on("getUserAndRoom", () => { 
-    if (alreadyInitGame) 
-      socket.emit("setUserAndRoom", { username, roomName });
-  });
-
+  
   socket.on("exitGame", () => finishedGame("O outro jogador desistiu do jogo! <br> Você ganhou!"));
   
   socket.on("updatePlayers", updatePlayers);

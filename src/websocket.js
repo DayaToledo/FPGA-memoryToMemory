@@ -94,16 +94,15 @@ io.of("/waiting").on("connection", (socket) => {
   });
 });
 
-io.of("/game").on("connection", (socket) => {
-  console.log(`>> Connected socket ${socket.id} in /game`);
-  
-  socket.on("setUserAndRoom", ({ username, roomName }) => {
-    socket.join(roomName);
-    console.log(`>> The player ${username} was connected in the room ${roomName}`);
-    if (rooms[roomName] && rooms[roomName][username]) rooms[roomName][username].socketId = socket.id;
-  });
+const gameNamespace = io.of("/game");
 
-  socket.emit("getUserAndRoom");
+gameNamespace.on("connection", (socket) => {
+  const { username, roomName } = socket.handshake.query;
+  console.log(`>> Connected ${username} in the room ${roomName} with socketId ${socket.id} in /game`);
+  
+  socket.join(roomName);
+  if (rooms[roomName] && rooms[roomName][username]) 
+    rooms[roomName][username].socketId = socket.id;
 
   socket.on("initGame", ({ username, roomName }) => {
     socket.join(roomName);
@@ -120,14 +119,14 @@ io.of("/game").on("connection", (socket) => {
       rooms[roomName].clientPlaying = clientSorted;
       rooms[roomName][clientSorted].playing = true;
     }
-    io.to(roomName).emit("updatePlayers", { players: rooms[roomName] });
-    io.to(socket.id).emit("previousMessages", rooms[roomName].messages);
+    gameNamespace.to(roomName).emit("updatePlayers", { players: rooms[roomName] });
+    gameNamespace.to(socket.id).emit("previousMessages", rooms[roomName].messages);
   });
 
   socket.on("passGame", ({ username, roomName }) => {
     rooms[roomName][username].playing = false;
     setOtherTrue({ username, roomName });
-    io.to(roomName).emit("updatePlayers", { players: rooms[roomName] });
+    gameNamespace.to(roomName).emit("updatePlayers", { players: rooms[roomName] });
   });
 
   socket.on("sendMessage", data => {
@@ -137,14 +136,14 @@ io.of("/game").on("connection", (socket) => {
 
     delete data.roomName;
     rooms[roomName].messages.push(data);
-    io.to(roomName).emit("receivedMessage", [data]);
+    gameNamespace.to(roomName).emit("receivedMessage", [data]);
   });
 
   socket.on("sendCards", data => {
     const { myCard, opponentCard, username, roomName } = data;
     rooms[roomName][username].myCard = myCard;
     rooms[roomName][username].opponentCard = opponentCard;
-    io.to(roomName).emit("receivedCards", { myCard, opponentCard, username });
+    gameNamespace.to(roomName).emit("receivedCards", { myCard, opponentCard, username });
   });
 
   socket.on("sendResult", ({ isWinner, roomName }) => {
@@ -172,7 +171,7 @@ io.of("/").adapter.on("create-room", (room) => {
     console.log(`>> Room ${room} was created`);
 });
 
-io.of("/game").adapter.on("delete-room", (room) => {
+io.of("/").adapter.on("delete-room", (room) => {
   if (rooms[room])
     console.log(`>> Room ${room} was deleted`);
 });
