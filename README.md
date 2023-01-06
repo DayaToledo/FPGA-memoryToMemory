@@ -84,6 +84,15 @@ Essa aplicação foi desenvolvida utilizando:
   <img width="400px" height="200px" style="border-radius: 5px" alt="Tela de aviso de ganhou o jogo" src="https://user-images.githubusercontent.com/55140068/210907496-040ae2c5-ec92-4b49-a297-62f7866b6f34.png">
 </p>
 
+&nbsp;
+## :rocket: Como executar o projeto
+
+1. Tenha instalado NodeJS, NPM e GIT
+2. Faça clone do repositório localmente na sua máquina: `git clone https://github.com/DayaToledo/FPGA-memoryToMemory.git`
+3. Acesse a pasta raiz do projeto (pasta onde tem o arquivo package.json)
+4. Execute o comando para instalar as dependências do projeto: `npm install`
+5. Execute o comando para iniciar o projeto: `npm run start`
+6. Acesse o projeto no navegador, na url `http://localhost:3000/`
 
 &nbsp;
 ## 📃 Licença
