@@ -3,7 +3,7 @@ let username;
 let roomName;
 
 const handleInitDocument = () => {
-  const siteURL = document.querySelector("body h6").innerHTML;
+  const siteURL = document.querySelector("body h6").innerHTML + "/waiting";
   console.log(siteURL);
   socket = io(siteURL, { transports : ['websocket'] });
   
