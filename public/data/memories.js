@@ -74,7 +74,7 @@ const items = {
     description: [
       "memória externa",
       "memória não volátil ",
-      "os dados podem alterados",
+      "os dados podem ser alterados",
     ]
   },
   "9": {
@@ -83,7 +83,7 @@ const items = {
     description: [
       "memória externa",
       "memória não volátil ",
-      "os dados podem alterados ",
+      "os dados podem ser alterados ",
       "regravação de dados é muito mais rápida",
     ]
   },
@@ -102,7 +102,7 @@ const items = {
     description: [
       "memória interna",
       "memória não volátil ",
-      "os dados podem alterados (luz ultravioleta)",
+      "os dados podem ser alterados (luz ultravioleta)",
     ]
   },
   "12": {
@@ -111,7 +111,7 @@ const items = {
     description: [
       "memória interna",
       "memória não volátil ",
-      "os dados podem alterados (eletricamente)",
+      "os dados podem ser alterados (eletricamente)",
     ]
   },
   "13": {
@@ -120,7 +120,7 @@ const items = {
     description: [
       "memória interna",
       "memória não volátil  ",
-      "os dados podem alterados",
+      "os dados podem ser alterados",
     ]
   },
   "14": {
